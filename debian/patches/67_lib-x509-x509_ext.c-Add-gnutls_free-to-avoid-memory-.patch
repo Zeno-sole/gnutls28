@@ -1,0 +1,40 @@
+From 9d567481dad33c4044baa4e659862ee096d014ae Mon Sep 17 00:00:00 2001
+From: Jiasheng Jiang <jian1000@purdue.edu>
+Date: Sat, 5 Jul 2025 00:55:17 +0000
+Subject: [PATCH] lib/x509/x509_ext.c: Add gnutls_free() to avoid memory leak
+
+Add gnutls_free() to free ooc if subject_alt_names_set() fails to avoid memory leak.
+
+Fixes: 2bd323f72 ("Added new API to handle X.509 extensions.")
+Signed-off-by: JiashengJiang <jiasheng@purdue.edu>
+---
+ lib/x509/x509_ext.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/lib/x509/x509_ext.c
++++ b/lib/x509/x509_ext.c
+@@ -187,10 +187,11 @@ int gnutls_subject_alt_names_set(gnutls_
+ 	else
+ 		ooc = NULL;
+ 	ret = subject_alt_names_set(&sans->names, &sans->size,
+ 				    san_type, &copy, ooc, 0);
+ 	if (ret < 0) {
++		gnutls_free(ooc);
+ 		gnutls_free(copy.data);
+ 		return gnutls_assert_val(ret);
+ 	}
+ 
+ 	return 0;
+@@ -806,10 +807,12 @@ int gnutls_x509_aki_set_cert_issuer(gnut
+ 	ret =
+ 	    subject_alt_names_set(&aki->cert_issuer.names,
+ 				  &aki->cert_issuer.size, san_type, &t_san,
+ 				  (char *)t_othername_oid.data, 0);
+ 	if (ret < 0) {
++		gnutls_free(t_othername_oid.data);
++		gnutls_free(t_san.data);
+ 		gnutls_assert();
+ 		return ret;
+ 	}
+ 
+ 	return 0;

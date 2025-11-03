@@ -1,0 +1,37 @@
+From 263917ec9fe00e9767487636593921444fb0b0af Mon Sep 17 00:00:00 2001
+From: Xin Long <lucien.xin@gmail.com>
+Date: Thu, 1 Feb 2024 17:21:05 -0500
+Subject: [PATCH 5/5] lib: fix a potential segfault in _gnutls13_recv_finished
+
+In _gnutls13_recv_finished(), 'buf' is not initialized or set when
+_gnutls13_compute_finished() returns an err, and goto cleanup may
+cause a segfault crash as it frees the uninitialized buf.allocd in
+_gnutls_buffer_clear().
+
+So fix it by return if _gnutls13_compute_finished() returns an err
+in _gnutls13_recv_finished().
+
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+---
+ lib/tls13/finished.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+--- a/lib/tls13/finished.c
++++ b/lib/tls13/finished.c
+@@ -89,14 +89,12 @@ int _gnutls13_recv_finished(gnutls_sessi
+ 
+ 	ret = _gnutls13_compute_finished(session->security_parameters.prf,
+ 			base_key,
+ 			&session->internals.handshake_hash_buffer,
+ 			verifier);
+-	if (ret < 0) {
+-		gnutls_assert();
+-		goto cleanup;
+-	}
++	if (ret < 0)
++		return gnutls_assert_val(ret);
+ 
+ 	ret = _gnutls_recv_handshake(session, GNUTLS_HANDSHAKE_FINISHED, 0, &buf);
+ 	if (ret < 0)
+ 		return gnutls_assert_val(ret);
+ 

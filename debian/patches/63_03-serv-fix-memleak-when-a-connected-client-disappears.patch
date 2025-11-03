@@ -1,0 +1,26 @@
+From 88e9d7f27fa23dead8b0da21f5461a9810d48286 Mon Sep 17 00:00:00 2001
+From: Daiki Ueno <ueno@gnu.org>
+Date: Sat, 27 Jan 2024 11:09:18 +0900
+Subject: [PATCH 3/5] serv: fix memleak when a connected client disappears
+
+Reported by Hubert Kario.
+
+Signed-off-by: Daiki Ueno <ueno@gnu.org>
+---
+ src/serv.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/src/serv.c
++++ b/src/serv.c
+@@ -183,10 +183,11 @@ static void listener_free(const void *el
+ 			gnutls_bye(j->tls_session, GNUTLS_SHUT_WR);
+ 		shutdown(j->fd, 2);
+ 		close(j->fd);
+ 		gnutls_deinit(j->tls_session);
+ 	}
++	free(j);
+ }
+ 
+ 
+ /* we use primes up to 1024 in this server.
+  * otherwise we should add them here.

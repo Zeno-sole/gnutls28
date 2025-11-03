@@ -1,0 +1,40 @@
+From 8b648e99d2d16f228a63b4075c487c9f3ec26927 Mon Sep 17 00:00:00 2001
+From: Xin Long <lucien.xin@gmail.com>
+Date: Thu, 1 Feb 2024 16:50:22 -0500
+Subject: [PATCH 4/5] lib: fix a segfault in _gnutls13_recv_end_of_early_data
+
+A crash occur in my app that uses gnutls13 early data, stack trace:
+
+  #0  free (libc.so.6 + 0x97bf0)
+  #1  _gnutls_buffer_clear (libgnutls.so.30 + 0x77c8c)
+  #2  _gnutls13_recv_end_of_early_data (libgnutls.so.30 + 0xaf308)
+  #3  _gnutls13_handshake_server (libgnutls.so.30 + 0x42d6c)
+  #4  handshake_server (libgnutls.so.30 + 0x4ff6c)
+
+The root cause is that _gnutls_buffer_clear() was trying to free
+'buf' that is not initialized or set if GNUTLS_NO_END_OF_EARLY_DATA
+flag is set on server side.
+
+This patch fixes it by simply initializing buf at the begginning of
+_gnutls13_recv_end_of_early_data().
+
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+---
+ lib/tls13/early_data.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/lib/tls13/early_data.c
++++ b/lib/tls13/early_data.c
+@@ -79,10 +79,12 @@ int _gnutls13_send_end_of_early_data(gnu
+ int _gnutls13_recv_end_of_early_data(gnutls_session_t session)
+ {
+ 	int ret;
+ 	gnutls_buffer_st buf;
+ 
++	_gnutls_buffer_init(&buf);
++
+ 	if (!(session->security_parameters.entity == GNUTLS_SERVER &&
+ 	      session->internals.hsk_flags & HSK_EARLY_DATA_ACCEPTED))
+ 		return 0;
+ 
+ 	if (!(session->internals.flags & GNUTLS_NO_END_OF_EARLY_DATA)) {

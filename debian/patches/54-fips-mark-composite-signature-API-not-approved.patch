@@ -1,0 +1,215 @@
+From 02faaf6f8b490fee465d07e020473386425ffdd2 Mon Sep 17 00:00:00 2001
+From: Daiki Ueno <ueno@gnu.org>
+Date: Thu, 29 Sep 2022 17:13:00 +0900
+Subject: [PATCH 09/29] fips: mark composite signature API not-approved
+
+This makes the FIPS service indicator to transit to not-approved when
+gnutls_privkey_sign_hash* is used.  In FIPS, single-shot
+API (gnutls_privkey_sign_data*) is preferred over composite API.
+
+Signed-off-by: Daiki Ueno <ueno@gnu.org>
+---
+ lib/privkey.c     | 42 ++++++++++++++++++++++---------
+ tests/fips-test.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 94 insertions(+), 12 deletions(-)
+
+--- a/lib/privkey.c
++++ b/lib/privkey.c
+@@ -1249,31 +1249,40 @@ gnutls_privkey_sign_hash2(gnutls_privkey
+ 		/* the corresponding signature algorithm is SIGN_RSA_RAW,
+ 		 * irrespective of hash algorithm. */
+ 		se = _gnutls_sign_to_entry(GNUTLS_SIGN_RSA_RAW);
+ 	} else {
+ 		se = _gnutls_sign_to_entry(algo);
+-		if (unlikely(se == NULL))
+-			return gnutls_assert_val(GNUTLS_E_INVALID_REQUEST);
+-
++		if (unlikely(se == NULL)) {
++			ret = gnutls_assert_val(GNUTLS_E_INVALID_REQUEST);
++			goto cleanup;
++		}
+ 	}
+ 
+ 	ret = _gnutls_privkey_get_spki_params(signer, &params);
+ 	if (ret < 0) {
+ 		gnutls_assert();
+-		return ret;
++		goto cleanup;
+ 	}
+ 
+ 	ret = _gnutls_privkey_update_spki_params(signer, se->pk, se->hash,
+ 					         flags, &params);
+ 	if (ret < 0) {
+ 		gnutls_assert();
+-		return ret;
++		goto cleanup;
+ 	}
+ 
+ 	FIX_SIGN_PARAMS(params, flags, se->hash);
+ 
+-	return privkey_sign_prehashed(signer, se, hash_data, signature, &params);
++	ret = privkey_sign_prehashed(signer, se, hash_data, signature, &params);
++
++ cleanup:
++	if (ret < 0) {
++		_gnutls_switch_fips_state(GNUTLS_FIPS140_OP_ERROR);
++	} else {
++		_gnutls_switch_fips_state(GNUTLS_FIPS140_OP_NOT_APPROVED);
++	}
++	return ret;
+ }
+ 
+ int
+ privkey_sign_and_hash_data(gnutls_privkey_t signer,
+ 			   const gnutls_sign_entry_st *se,
+@@ -1364,18 +1373,18 @@ gnutls_privkey_sign_hash(gnutls_privkey_
+ 	const gnutls_sign_entry_st *se;
+ 
+ 	ret = _gnutls_privkey_get_spki_params(signer, &params);
+ 	if (ret < 0) {
+ 		gnutls_assert();
+-		return ret;
++		goto cleanup;
+ 	}
+ 
+ 	ret = _gnutls_privkey_update_spki_params(signer, signer->pk_algorithm,
+ 					       hash_algo, flags, &params);
+ 	if (ret < 0) {
+ 		gnutls_assert();
+-		return ret;
++		goto cleanup;
+ 	}
+ 
+ 	/* legacy callers of this API could use a hash algorithm of 0 (unknown)
+ 	 * to indicate raw hashing. As we now always want to know the signing
+ 	 * algorithm involved, we try discovering the hash algorithm. */
+@@ -1389,17 +1398,26 @@ gnutls_privkey_sign_hash(gnutls_privkey_
+ 		se = _gnutls_sign_to_entry(GNUTLS_SIGN_RSA_RAW);
+ 	} else {
+ 		se = _gnutls_pk_to_sign_entry(params.pk, hash_algo);
+ 	}
+ 
+-	if (unlikely(se == NULL))
+-		return gnutls_assert_val(GNUTLS_E_INVALID_REQUEST);
++	if (unlikely(se == NULL)) {
++		ret = gnutls_assert_val(GNUTLS_E_INVALID_REQUEST);
++		goto cleanup;
++	}
+ 
+ 	FIX_SIGN_PARAMS(params, flags, hash_algo);
+ 
+-	return privkey_sign_prehashed(signer, se,
+-				      hash_data, signature, &params);
++	ret = privkey_sign_prehashed(signer, se,
++				     hash_data, signature, &params);
++ cleanup:
++	if (ret < 0) {
++		_gnutls_switch_fips_state(GNUTLS_FIPS140_OP_ERROR);
++	} else {
++		_gnutls_switch_fips_state(GNUTLS_FIPS140_OP_NOT_APPROVED);
++	}
++	return ret;
+ }
+ 
+ static int
+ privkey_sign_prehashed(gnutls_privkey_t signer,
+ 		       const gnutls_sign_entry_st *se,
+--- a/tests/fips-test.c
++++ b/tests/fips-test.c
+@@ -286,10 +286,12 @@ void doit(void)
+ 	gnutls_datum_t key = { key16, sizeof(key16) };
+ 	gnutls_datum_t iv = { iv16, sizeof(iv16) };
+ 	gnutls_datum_t signature;
+ 	unsigned int bits;
+ 	uint8_t hmac[64];
++	uint8_t hash[64];
++	gnutls_datum_t hashed_data;
+ 
+ 	fprintf(stderr,
+ 		"Please note that if in FIPS140 mode, you need to assure the library's integrity prior to running this test\n");
+ 
+ 	gnutls_global_set_log_function(tls_log_func);
+@@ -538,10 +540,40 @@ void doit(void)
+ 				       &data, &signature);
+ 	if (ret < 0) {
+ 		fail("gnutls_privkey_sign_data failed\n");
+ 	}
+ 	FIPS_POP_CONTEXT(APPROVED);
++
++	/* Create a SHA256 hashed data for 2-pass signature API; not a
++	 * crypto operation */
++	FIPS_PUSH_CONTEXT();
++	ret = gnutls_hash_fast(GNUTLS_DIG_SHA256, data.data, data.size, hash);
++	if (ret < 0) {
++		fail("gnutls_hash_fast failed\n");
++	}
++	hashed_data.data = hash;
++	hashed_data.size = 32;
++	FIPS_POP_CONTEXT(INITIAL);
++
++	/* Create a signature with ECDSA and SHA256 (2-pass API); not-approved */
++	FIPS_PUSH_CONTEXT();
++	ret = gnutls_privkey_sign_hash2(privkey, GNUTLS_SIGN_ECDSA_SHA256, 0,
++					&hashed_data, &signature);
++	if (ret < 0) {
++		fail("gnutls_privkey_sign_hash2 failed\n");
++	}
++	FIPS_POP_CONTEXT(NOT_APPROVED);
++	gnutls_free(signature.data);
++
++	/* Create a signature with ECDSA and SHA256 (2-pass old API); not-approved */
++	FIPS_PUSH_CONTEXT();
++	ret = gnutls_privkey_sign_hash(privkey, GNUTLS_DIG_SHA256, 0,
++					&hashed_data, &signature);
++	if (ret < 0) {
++		fail("gnutls_privkey_sign_hash failed\n");
++	}
++	FIPS_POP_CONTEXT(NOT_APPROVED);
+ 	gnutls_free(signature.data);
+ 
+ 	/* Create a signature with ECDSA and SHA-1; not approved */
+ 	FIPS_PUSH_CONTEXT();
+ 	ret = gnutls_privkey_sign_data2(privkey, GNUTLS_SIGN_ECDSA_SHA1, 0,
+@@ -569,10 +601,42 @@ void doit(void)
+ 	if (ret < 0) {
+ 		fail("gnutls_privkey_sign_data failed\n");
+ 	}
+ 	FIPS_POP_CONTEXT(NOT_APPROVED);
+ 	gnutls_free(signature.data);
++
++	/* Create a SHA1 hashed data for 2-pass signature API; not a
++	 * crypto operation */
++	FIPS_PUSH_CONTEXT();
++	ret = gnutls_hash_fast(GNUTLS_DIG_SHA1, data.data, data.size, hash);
++	if (ret < 0) {
++		fail("gnutls_hash_fast failed\n");
++	}
++	hashed_data.data = hash;
++	hashed_data.size = 20;
++	FIPS_POP_CONTEXT(INITIAL);
++
++	/* Create a signature with ECDSA and SHA1 (2-pass API); not-approved */
++	FIPS_PUSH_CONTEXT();
++	ret = gnutls_privkey_sign_hash2(privkey, GNUTLS_SIGN_ECDSA_SHA1, 0,
++					&hashed_data, &signature);
++	if (ret < 0) {
++		fail("gnutls_privkey_sign_hash2 failed\n");
++	}
++	FIPS_POP_CONTEXT(NOT_APPROVED);
++	gnutls_free(signature.data);
++
++	/* Create a signature with ECDSA and SHA1 (2-pass old API); not-approved */
++	FIPS_PUSH_CONTEXT();
++	ret = gnutls_privkey_sign_hash(privkey, GNUTLS_DIG_SHA1, 0,
++					&hashed_data, &signature);
++	if (ret < 0) {
++		fail("gnutls_privkey_sign_hash failed\n");
++	}
++	FIPS_POP_CONTEXT(NOT_APPROVED);
++	gnutls_free(signature.data);
++
+ 	gnutls_pubkey_deinit(pubkey);
+ 	gnutls_privkey_deinit(privkey);
+ 
+         /* Test RND functions */
+ 	FIPS_PUSH_CONTEXT();

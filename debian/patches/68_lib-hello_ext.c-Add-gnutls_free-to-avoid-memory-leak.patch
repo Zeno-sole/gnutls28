@@ -1,0 +1,35 @@
+From 1b69a374e656967be41200fd93303e6ed82a1ba4 Mon Sep 17 00:00:00 2001
+From: Jiasheng Jiang <jian1000@purdue.edu>
+Date: Sat, 5 Jul 2025 00:56:36 +0000
+Subject: [PATCH] lib/hello_ext.c: Add gnutls_free() to avoid memory leak
+
+Add gnutls_free() to free tmp_mod.name in the error handling to avoid memory leak.
+
+Fixes: 5bba569b4 ("gnutls_session_ext_register: keep track of extension name")
+Signed-off-by: JiashengJiang <jiasheng@purdue.edu>
+---
+ lib/hello_ext.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/lib/hello_ext.c
++++ b/lib/hello_ext.c
+@@ -926,17 +926,19 @@ gnutls_session_ext_register(gnutls_sessi
+ 		else
+ 			tmp_mod.validity |= GNUTLS_EXT_FLAG_TLS;
+ 	}
+ 
+ 	if (unlikely(INT_ADD_OVERFLOW(session->internals.rexts_size, 1))) {
++		gnutls_free(tmp_mod.name);
+ 		return gnutls_assert_val(GNUTLS_E_MEMORY_ERROR);
+ 	}
+ 
+ 	exts = _gnutls_reallocarray(session->internals.rexts,
+ 				    session->internals.rexts_size + 1,
+ 				    sizeof(*exts));
+ 	if (exts == NULL) {
++		gnutls_free(tmp_mod.name);
+ 		return gnutls_assert_val(GNUTLS_E_MEMORY_ERROR);
+ 	}
+ 
+ 	session->internals.rexts = exts;
+ 

@@ -1,3 +1,82 @@
+gnutls28 (3.7.9-2+deb12u5) bookworm-security; urgency=medium
+
+  * Cherry-pick fixes from 3.8.10 release:
+     + libgnutls: Fix NULL pointer dereference when 2nd Client Hello omits
+       PSK Reported by Stefan Bühler.
+       [GNUTLS-SA-2025-07-07-4, CVSS: medium] [CVE-2025-6395]
+     + libgnutls: Fix heap read buffer overrun in parsing X.509 SCTS
+       timestamps Spotted by oss-fuzz and reported by OpenAI Security
+       Research Team, and fix developed by Andrew Hamilton.
+       [GNUTLS-SA-2025-07-07-1, CVSS: medium] [CVE-2025-32989]
+     + libgnutls: Fix double-free upon error when exporting otherName in
+       SAN Reported by OpenAI Security Research Team.
+       [GNUTLS-SA-2025-07-07-2, CVSS: low] [CVE-2025-32988]
+     + certtool: Fix 1-byte write buffer overrun when parsing template
+       Reported by David Aitel. [GNUTLS-SA-2025-07-07-3, CVSS: low]
+       [CVE-2025-32990]
+     + Fixes for memory leaks in lib/x509/x509_ext.c andlib/hello_ext.c.
+     + Fix uninitialized memory read while processing the "pre_shared_key"
+       extension in TLS 1.3.
+     + Avoid uninitialized use of crq version.
+
+ -- Andreas Metzler <ametzler@debian.org>  Tue, 15 Jul 2025 07:02:19 +0200
+
+gnutls28 (3.7.9-2+deb12u4) bookworm-security; urgency=medium
+
+  *  libgnutls: Fix potential DoS in handling certificates with numerous
+     name constraints, as a follow-up of CVE-2024-12133 in libtasn1.
+     Patch cherry-picked from 3.8.9 release.
+     [GNUTLS-SA-2025-02-07, CVSS: medium] [CVE-2024-12243]
+
+ -- Andreas Metzler <ametzler@debian.org>  Mon, 10 Feb 2025 10:07:24 +0100
+
+gnutls28 (3.7.9-2+deb12u3) bookworm; urgency=medium
+
+  * Update to 3.7.11:
+    + Replace 60-auth-rsa_psk-side-step-potential-side-channel.patch
+      61-x509-detect-loop-in-certificate-chain.patch
+      62-rsa-psk-minimize-branching-after-decryption.patch with versions from
+      gnutls_3_7_x branch instead of manual backports from 3.8.x.
+    + Add 53-fips-fix-checking-on-hash-algorithm-used-in-ECDSA.patch (Fix
+      checking on hash algorithm used in ECDSA in FIPS mode) and
+      54-fips-mark-composite-signature-API-not-approved.patch (Mark composite
+      signature API non-approved in FIPS mode.) to allow
+      straight cherry-picking of later patches.
+    + 63_01-gnutls_x509_trust_list_verify_crt2-remove-length-lim.patch
+      libgnutls: Fixed a bug where certtool crashed when verifying a
+      certificate chain with more than 16 certificates. Reported by William
+      Woodruff (#1525) and yixiangzhike (#1527).  [GNUTLS-SA-2024-01-23, CVSS:
+      medium] [CVE-2024-28835] Closes: #1067463
+    + 63_02-nettle-avoid-normalization-of-mpz_t-in-deterministic.patch
+      libgnutls: Fix side-channel in the deterministic ECDSA.
+      Reported by George Pantelakis (#1516).  [GNUTLS-SA-2023-12-04, CVSS:
+      medium] [CVE-2024-28834] Closes: #1067464
+    + 63_03-serv-fix-memleak-when-a-connected-client-disappears.patch
+      Fix a memleak in gnutls-serv when a connected client disappears.
+    + 63_04-lib-fix-a-segfault-in-_gnutls13_recv_end_of_early_da.patch
+      Fix a segfault in _gnutls13_recv_end_of_early_data().
+    + 63_05-lib-fix-a-potential-segfault-in-_gnutls13_recv_finis.patch
+      Fix a potential segfault in _gnutls13_recv_finished().
+
+ -- Andreas Metzler <ametzler@debian.org>  Sat, 15 Jun 2024 13:22:35 +0200
+
+gnutls28 (3.7.9-2+deb12u2) bookworm; urgency=medium
+
+  * Cherrypick two CVE fixes from 3.8.3:
+    Fix assertion failure when verifying a certificate chain with a cycle of
+    cross signatures. CVE-2024-0567 GNUTLS-SA-2024-01-09 Closes: #1061045
+    Fix more timing side-channel inside RSA-PSK key exchange. CVE-2024-0553
+    GNUTLS-SA-2024-01-14 Closes: #1061046
+
+ -- Andreas Metzler <ametzler@debian.org>  Fri, 19 Jan 2024 18:28:37 +0100
+
+gnutls28 (3.7.9-2+deb12u1) bookworm; urgency=medium
+
+  * Backport fix for CVE-2023-5981 / GNUTLS-SA-2023-10-23 (timing sidechannel
+    in RSA-PSK key exchange) from 3.8.2. Closes: #1056188
+
+ -- Andreas Metzler <ametzler@debian.org>  Thu, 30 Nov 2023 07:50:48 +0100
+
 gnutls28 (3.7.9-2) unstable; urgency=medium
 
   * CI: Do not try to run tests/ktls.sh, it uses a helper binary. (Plus gnutls
