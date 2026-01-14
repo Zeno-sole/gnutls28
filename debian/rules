@@ -46,7 +46,7 @@ override_dh_auto_configure:
 		$(AMCONFBUILDINDEP)
 
 override_dh_autoreconf:
-	rm -v `grep -rl gettext-0.20 m4/`
+	grep -rl 'gettext-0.20' m4/ 2>/dev/null | xargs --no-run-if-empty rm -v
 	if ! dh_listpackages | grep -q gnutls-doc ; \
 		then env GTKDOCIZE="echo DISABLED running gtkdocize" \
 			dh_autoreconf --verbose $(BDIR) ; \

@@ -1,0 +1,25 @@
+Index: deepin-gnutls28/lib/accelerated/x86/x86-common.c
+===================================================================
+--- deepin-gnutls28.orig/lib/accelerated/x86/x86-common.c
++++ deepin-gnutls28/lib/accelerated/x86/x86-common.c
+@@ -857,6 +857,7 @@ enum x86_cpu_vendor {
+ 	X86_CPU_VENDOR_OTHER,
+ 	X86_CPU_VENDOR_INTEL,
+ 	X86_CPU_VENDOR_AMD,
++	X86_CPU_VENDOR_HYGON,
+ };
+ 
+ static enum x86_cpu_vendor check_x86_cpu_vendor(void)
+@@ -879,6 +880,12 @@ static enum x86_cpu_vendor check_x86_cpu
+ 		return X86_CPU_VENDOR_AMD;
+ 	}
+ 
++	if (memcmp(&b, "Hygo", 4) == 0 &&
++	    memcmp(&d, "nGen", 4) == 0 &&
++	    memcmp(&c, "uine", 4) == 0) {
++		return X86_CPU_VENDOR_HYGON;
++	}
++
+ 	return X86_CPU_VENDOR_OTHER;
+ }
+ 

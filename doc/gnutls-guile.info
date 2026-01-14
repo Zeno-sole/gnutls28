@@ -1,10 +1,10 @@
-This is gnutls-guile.info, produced by makeinfo version 6.8 from
+This is gnutls-guile.info, produced by makeinfo version 7.1 from
 gnutls-guile.texi.
 
 This manual is last updated 9 February 2023 for version 3.7.9 of GnuTLS.
 
-Copyright (C) 2001-2012, 2014, 2016, 2019, 2022 Free Software
-Foundation, Inc.
+Copyright © 2001-2012, 2014, 2016, 2019, 2022 Free Software Foundation,
+Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -25,8 +25,8 @@ GnuTLS-Guile
 
 This manual is last updated 9 February 2023 for version 3.7.9 of GnuTLS.
 
-Copyright (C) 2001-2012, 2014, 2016, 2019, 2022 Free Software
-Foundation, Inc.
+Copyright © 2001-2012, 2014, 2016, 2019, 2022 Free Software Foundation,
+Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -73,7 +73,7 @@ The GnuTLS Guile bindings are available for the Guile 3.0 and 2.2
 series, as well as the legacy 2.0 series.
 
 By default they are installed under the GnuTLS installation directory,
-typically '/usr/local/share/guile/site/').  Normally Guile will not find
+typically ‘/usr/local/share/guile/site/’).  Normally Guile will not find
 the module there without help.  You may experience something like this:
 
      $ guile
@@ -83,16 +83,16 @@ the module there without help.  You may experience something like this:
 
 There are two ways to solve this.  The first is to make sure that when
 building GnuTLS, the Guile bindings will be installed in the same place
-where Guile looks.  You may do this by using the '--with-guile-site-dir'
+where Guile looks.  You may do this by using the ‘--with-guile-site-dir’
 parameter as follows:
 
      $ ./configure --with-guile-site-dir=no
 
 This will instruct GnuTLS to attempt to install the Guile bindings where
-Guile will look for them.  It will use 'guile-config info pkgdatadir' to
+Guile will look for them.  It will use ‘guile-config info pkgdatadir’ to
 learn the path to use.
 
-If Guile was installed into '/usr', you may also install GnuTLS using
+If Guile was installed into ‘/usr’, you may also install GnuTLS using
 the same prefix:
 
      $ ./configure --prefix=/usr
@@ -105,16 +105,16 @@ also specify the path directly:
 The second solution requires some more work but may be easier to use if
 you do not have system administrator rights to your machine.  You need
 to instruct Guile so that it finds the GnuTLS Guile bindings.  Either
-use the 'GUILE_LOAD_PATH' environment variable as follows:
+use the ‘GUILE_LOAD_PATH’ environment variable as follows:
 
      $ GUILE_LOAD_PATH="/usr/local/share/guile/site:$GUILE_LOAD_PATH" guile
      scheme@(guile-user)> (use-modules (gnutls))
      scheme@(guile-user)>
 
-Alternatively, you can modify Guile's '%load-path' variable (*note
+Alternatively, you can modify Guile's ‘%load-path’ variable (*note
 Guile's run-time options: (guile)Build Config.).
 
-At this point, you might get an error regarding 'guile-gnutls-v-2'
+At this point, you might get an error regarding ‘guile-gnutls-v-2’
 similar to:
 
      gnutls.scm:361:1: In procedure dynamic-link in expression (load-extension "guile-gnutls-v-2" "scm_init_gnutls"):
@@ -166,15 +166,15 @@ This makes it impossible to use an enumerate value of the wrong type on
 the Scheme side: such errors are automatically detected by
 type-checking.
 
-The enumerate values are bound to variables exported by the '(gnutls)'
+The enumerate values are bound to variables exported by the ‘(gnutls)’
 module.  These variables are named according to the following
 convention:
 
-   * All variable names are lower-case; the underscore '_' character
-     used in the C API is replaced by hyphen '-'.
-   * All variable names are prepended by the name of the enumerate type
-     and the slash '/' character.
-   * In some cases, the variable name is made more explicit than the one
+   • All variable names are lower-case; the underscore ‘_’ character
+     used in the C API is replaced by hyphen ‘-’.
+   • All variable names are prepended by the name of the enumerate type
+     and the slash ‘/’ character.
+   • In some cases, the variable name is made more explicit than the one
      of the C API, e.g., by avoid abbreviations.
 
 Consider for instance this C-side enumerate:
@@ -188,7 +188,7 @@ Consider for instance this C-side enumerate:
      } gnutls_credentials_type_t;
 
 The corresponding Scheme values are bound to the following variables
-exported by the '(gnutls)' module:
+exported by the ‘(gnutls)’ module:
 
      credentials/certificate
      credentials/anonymous
@@ -197,7 +197,7 @@ exported by the '(gnutls)' module:
 
 Hopefully, most variable names can be deduced from this convention.
 
-Scheme-side "enumerate" values can be compared using 'eq?' (*note
+Scheme-side "enumerate" values can be compared using ‘eq?’ (*note
 equality predicates: (guile)Equality.).  Consider the following example:
 
      (let ((session (make-session connection-end/client)))
@@ -211,9 +211,9 @@ equality predicates: (guile)Equality.).  Consider the following example:
            (format #t "We're using the ARCFOUR algorithm")))
 
 In addition, all enumerate values can be converted to a human-readable
-string, in a type-specific way.  For instance, '(cipher->string
-cipher/arcfour)' yields '"ARCFOUR 128"', while '(key-usage->string
-key-usage/digital-signature)' yields '"digital-signature"'.  Note that
+string, in a type-specific way.  For instance, ‘(cipher->string
+cipher/arcfour)’ yields ‘"ARCFOUR 128"’, while ‘(key-usage->string
+key-usage/digital-signature)’ yields ‘"digital-signature"’.  Note that
 these strings may not be sufficient for use in a user interface since
 they are fairly concise and not internationalized.
 
@@ -226,16 +226,16 @@ File: gnutls-guile.info,  Node: Procedure Names,  Next: Representation of Binary
 Unlike C functions in GnuTLS, the corresponding Scheme procedures are
 named in a way that is close to natural English.  Abbreviations are also
 avoided.  For instance, the Scheme procedure corresponding to
-'gnutls_certificate_set_dh_params' is named
-'set-certificate-credentials-dh-parameters!'.  The 'gnutls_' prefix is
+‘gnutls_certificate_set_dh_params’ is named
+‘set-certificate-credentials-dh-parameters!’.  The ‘gnutls_’ prefix is
 always omitted from variable names since a similar effect can be
 achieved using Guile's nifty binding renaming facilities, should it be
 needed (*note (guile)Using Guile Modules::).
 
 Often Scheme procedure names differ from C function names in a way that
 makes it clearer what objects they operate on.  For example, the Scheme
-procedure named 'set-session-transport-port!' corresponds to
-'gnutls_transport_set_ptr', making it clear that this procedure applies
+procedure named ‘set-session-transport-port!’ corresponds to
+‘gnutls_transport_set_ptr’, making it clear that this procedure applies
 to session.
 
 
@@ -245,10 +245,10 @@ File: gnutls-guile.info,  Node: Representation of Binary Data,  Next: Input and 
 =================================
 
 Many procedures operate on binary data.  For instance,
-'pkcs3-import-dh-parameters' expects binary data as input.
+‘pkcs3-import-dh-parameters’ expects binary data as input.
 
 Binary data is represented on the Scheme side using bytevectors (*note
-(guile)Bytevectors::).  Homogeneous vectors such as SRFI-4 'u8vector's
+(guile)Bytevectors::).  Homogeneous vectors such as SRFI-4 ‘u8vector’s
 can also be used(1).
 
 As an example, generating and then exporting Diffie-Hellman parameters
@@ -263,7 +263,7 @@ in the PEM format can be done as follows:
 
    ---------- Footnotes ----------
 
-   (1) Historically, SRFI-4 'u8vector's are the closest thing to
+   (1) Historically, SRFI-4 ‘u8vector’s are the closest thing to
 bytevectors that Guile 1.8 and earlier supported.
 
 
@@ -274,14 +274,14 @@ File: gnutls-guile.info,  Node: Input and Output,  Next: Exception Handling,  Pr
 
 The underlying transport of a TLS session can be any Scheme input/output
 port (*note (guile)Ports and File Descriptors::).  This has to be
-specified using 'set-session-transport-port!'.
+specified using ‘set-session-transport-port!’.
 
 However, for better performance, a raw file descriptor can be specified,
-using 'set-session-transport-fd!'.  For instance, if the transport layer
+using ‘set-session-transport-fd!’.  For instance, if the transport layer
 is a socket port over an OS-provided socket, you can use the
-'port->fdes' or 'fileno' procedure to obtain the underlying file
-descriptor and pass it to 'set-session-transport-fd!' (*note
-'port->fdes' and 'fileno': (guile)Ports and File Descriptors.).  This
+‘port->fdes’ or ‘fileno’ procedure to obtain the underlying file
+descriptor and pass it to ‘set-session-transport-fd!’ (*note
+‘port->fdes’ and ‘fileno’: (guile)Ports and File Descriptors.).  This
 would work as follows:
 
      (let ((socket (socket PF_INET SOCK_STREAM 0))
@@ -296,7 +296,7 @@ would work as follows:
 
 Once a TLS session is established, data can be communicated through it
 (i.e., _via_ the TLS record layer) using the port returned by
-'session-record-port':
+‘session-record-port’:
 
      (let ((session (make-session connection-end/client)))
 
@@ -318,10 +318,10 @@ transmission of an encrypted TLS "Application Data" packet.  In the
 above example, we create an Application Data packet for the 11 bytes for
 the string that we write.  This is not efficient both in terms of CPU
 usage and bandwidth (each packet adds at least 5 bytes of overhead and
-can lead to one 'write' system call), so we recommend that applications
+can lead to one ‘write’ system call), so we recommend that applications
 do their own buffering.
 
-A lower-level I/O API is provided by 'record-send' and 'record-receive!'
+A lower-level I/O API is provided by ‘record-send’ and ‘record-receive!’
 which take a bytevector (or a SRFI-4 vector) to represent the data sent
 or received.  While it might improve performance, it is much less
 convenient than the session record port and should rarely be needed.
@@ -334,12 +334,12 @@ File: gnutls-guile.info,  Node: Exception Handling,  Prev: Input and Output,  Up
 
 GnuTLS errors are implemented as Scheme exceptions (*note exceptions in
 Guile: (guile)Exceptions.).  Each time a GnuTLS function returns an
-error, an exception with key 'gnutls-error' is raised.  The additional
+error, an exception with key ‘gnutls-error’ is raised.  The additional
 arguments that are thrown include an error code and the name of the
 GnuTLS procedure that raised the exception.  The error code is pretty
-much like an enumerate value: it is one of the 'error/' variables
-exported by the '(gnutls)' module (*note Enumerates and Constants::).
-Exceptions can be turned into error messages using the 'error->string'
+much like an enumerate value: it is one of the ‘error/’ variables
+exported by the ‘(gnutls)’ module (*note Enumerates and Constants::).
+Exceptions can be turned into error messages using the ‘error->string’
 procedure.
 
 The following examples illustrates how GnuTLS exceptions can be handled:
@@ -358,7 +358,7 @@ The following examples illustrates how GnuTLS exceptions can be handled:
                    "a GnuTLS error was raised by `~a': ~a~%"
                    function (error->string err)))))
 
-Again, error values can be compared using 'eq?':
+Again, error values can be compared using ‘eq?’:
 
          ;; `gnutls-error' handler.
          (lambda (key err function . currently-unused)
@@ -369,7 +369,7 @@ Again, error values can be compared using 'eq?':
                        "something bad happened: ~a~%"
                        (error->string err))))
 
-Note that the 'catch' handler is currently passed only 3 arguments but
+Note that the ‘catch’ handler is currently passed only 3 arguments but
 future versions might provide it with additional arguments.  Thus, it
 must be prepared to handle more than 3 arguments, as in this example.
 
@@ -391,7 +391,7 @@ File: gnutls-guile.info,  Node: Anonymous Authentication Guile Example,  Up: Gui
 4.1 Anonymous Authentication Guile Example
 ==========================================
 
-"Anonymous authentication" is very easy to use.  No certificates are
+“Anonymous authentication” is very easy to use.  No certificates are
 needed by the communicating parties.  Yet, it allows them to benefit
 from end-to-end encryption and integrity checks.
 
@@ -465,7 +465,7 @@ File: gnutls-guile.info,  Node: Guile Reference,  Next: Copying Information,  Pr
 *****************
 
 This chapter lists the GnuTLS Scheme procedures exported by the
-'(gnutls)' module (*note (guile)The Guile module system::).
+‘(gnutls)’ module (*note (guile)The Guile module system::).
 
  -- Scheme Procedure: set-log-level! level
      Enable GnuTLS logging up to LEVEL (an integer).
@@ -480,7 +480,7 @@ This chapter lists the GnuTLS Scheme procedures exported by the
      CRED.
 
  -- Scheme Procedure: %openpgp-keyring-contains-key-id? keyring id
-     Return '#f' if key ID ID is in KEYRING, '#f' otherwise.
+     Return ‘#f’ if key ID ID is in KEYRING, ‘#f’ otherwise.
 
  -- Scheme Procedure: import-openpgp-keyring data format
      Import DATA (a u8vector) according to FORMAT and return the
@@ -533,8 +533,8 @@ This chapter lists the GnuTLS Scheme procedures exported by the
  -- Scheme Procedure: x509-certificate-subject-alternative-name cert
           index
      Return two values: the alternative name type for CERT (i.e., one of
-     the 'x509-subject-alternative-name/' values) and the actual subject
-     alternative name (a string) at INDEX.  Both values are '#f' if no
+     the ‘x509-subject-alternative-name/’ values) and the actual subject
+     alternative name (a string) at INDEX.  Both values are ‘#f’ if no
      alternative name is available at INDEX.
 
  -- Scheme Procedure: x509-certificate-subject-key-id cert
@@ -553,16 +553,16 @@ This chapter lists the GnuTLS Scheme procedures exported by the
      Return the version of CERT.
 
  -- Scheme Procedure: x509-certificate-key-usage cert
-     Return the key usage of CERT (i.e., a list of 'key-usage/' values),
+     Return the key usage of CERT (i.e., a list of ‘key-usage/’ values),
      or the empty list if CERT does not contain such information.
 
  -- Scheme Procedure: x509-certificate-public-key-algorithm cert
      Return two values: the public key algorithm (i.e., one of the
-     'pk-algorithm/' values) of CERT and the number of bits used.
+     ‘pk-algorithm/’ values) of CERT and the number of bits used.
 
  -- Scheme Procedure: x509-certificate-signature-algorithm cert
      Return the signature algorithm used by CERT (i.e., one of the
-     'sign-algorithm/' values).
+     ‘sign-algorithm/’ values).
 
  -- Scheme Procedure: x509-certificate-matches-hostname? cert hostname
      Return true if CERT matches HOSTNAME, a string denoting a DNS host
@@ -571,10 +571,10 @@ This chapter lists the GnuTLS Scheme procedures exported by the
 
  -- Scheme Procedure: x509-certificate-issuer-dn-oid cert index
      Return the OID (a string) at INDEX from CERT's issuer DN. Return
-     '#f' if no OID is available at INDEX.
+     ‘#f’ if no OID is available at INDEX.
 
  -- Scheme Procedure: x509-certificate-dn-oid cert index
-     Return OID (a string) at INDEX from CERT.  Return '#f' if no OID is
+     Return OID (a string) at INDEX from CERT.  Return ‘#f’ if no OID is
      available at INDEX.
 
  -- Scheme Procedure: x509-certificate-issuer-dn cert
@@ -589,8 +589,8 @@ This chapter lists the GnuTLS Scheme procedures exported by the
           [encrypted]]
      Return a new X.509 private key object resulting from the import of
      DATA (a uniform array) according to FORMAT.  Optionally, if PASS is
-     not '#f', it should be a string denoting a passphrase.  ENCRYPTED
-     tells whether the private key is encrypted ('#t' by default).
+     not ‘#f’, it should be a string denoting a passphrase.  ENCRYPTED
+     tells whether the private key is encrypted (‘#t’ by default).
 
  -- Scheme Procedure: import-x509-private-key data format
      Return a new X.509 private key object resulting from the import of
@@ -619,17 +619,17 @@ This chapter lists the GnuTLS Scheme procedures exported by the
 
  -- Scheme Procedure: peer-certificate-status session
      Verify the peer certificate for SESSION and return a list of
-     'certificate-status' values (such as 'certificate-status/revoked'),
+     ‘certificate-status’ values (such as ‘certificate-status/revoked’),
      or the empty list if the certificate is valid.
 
  -- Scheme Procedure: set-certificate-credentials-verify-flags! cred
           [flags...]
      Set the certificate verification flags to FLAGS, a series of
-     'certificate-verify' values.
+     ‘certificate-verify’ values.
 
  -- Scheme Procedure: set-certificate-credentials-verify-limits! cred
           max-bits max-depth
-     Set the verification limits of 'peer-certificate-status' for
+     Set the verification limits of ‘peer-certificate-status’ for
      certificate credentials CRED to MAX_BITS bits for an acceptable
      certificate and MAX_DEPTH as the maximum depth of a certificate
      chain.
@@ -695,13 +695,13 @@ This chapter lists the GnuTLS Scheme procedures exported by the
 
  -- Scheme Procedure: pkcs3-export-dh-parameters dh-params format
      Export Diffie-Hellman parameters DH_PARAMS in PKCS3 format
-     according for FORMAT (an 'x509-certificate-format' value).  Return
-     a 'u8vector' containing the result.
+     according for FORMAT (an ‘x509-certificate-format’ value).  Return
+     a ‘u8vector’ containing the result.
 
  -- Scheme Procedure: pkcs3-import-dh-parameters array format
      Import Diffie-Hellman parameters in PKCS3 format (further specified
-     by FORMAT, an 'x509-certificate-format' value) from ARRAY (a
-     homogeneous array) and return a new 'dh-params' object.
+     by FORMAT, an ‘x509-certificate-format’ value) from ARRAY (a
+     homogeneous array) and return a new ‘dh-params’ object.
 
  -- Scheme Procedure: make-dh-parameters bits
      Return new Diffie-Hellman parameters.
@@ -715,19 +715,19 @@ This chapter lists the GnuTLS Scheme procedures exported by the
  -- Scheme Procedure: set-session-record-port-close! port close
      Set CLOSE, a one-argument procedure, as the procedure called when
      PORT is closed.  CLOSE will be passed PORT.  It may be called when
-     'close-port' is called on PORT, or when PORT is garbage-collected.
+     ‘close-port’ is called on PORT, or when PORT is garbage-collected.
      It is a useful way to free resources associated with PORT such as
      the session's transport file descriptor or port.
 
  -- Scheme Procedure: session-record-port session [close]
      Return a read-write port that may be used to communicate over
-     SESSION.  All invocations of 'session-port' on a given session
-     return the same object (in the sense of 'eq?').
+     SESSION.  All invocations of ‘session-port’ on a given session
+     return the same object (in the sense of ‘eq?’).
 
      If CLOSE is provided, it must be a one-argument procedure, and it
      will be called when the returned port is closed.  This is
      equivalent to setting it by calling
-     'set-session-record-port-close!'.
+     ‘set-session-record-port-close!’.
 
  -- Scheme Procedure: record-receive! session array
      Receive data from SESSION into ARRAY, a uniform homogeneous array.
@@ -738,8 +738,8 @@ This chapter lists the GnuTLS Scheme procedures exported by the
 
  -- Scheme Procedure: set-session-server-name! session type name
      For a client, this procedure provides a way to inform the server
-     that it is known under NAME, via the 'SERVER NAME' TLS extension.
-     TYPE must be a 'server-name-type' value, SERVER-NAME-TYPE/DNS for
+     that it is known under NAME, via the ‘SERVER NAME’ TLS extension.
+     TYPE must be a ‘server-name-type’ value, SERVER-NAME-TYPE/DNS for
      DNS names.
 
  -- Scheme Procedure: set-session-credentials! session cred
@@ -752,7 +752,7 @@ This chapter lists the GnuTLS Scheme procedures exported by the
      Have SESSION use the given PRIORITIES for the ciphers, key exchange
      methods, MACs and compression methods.  PRIORITIES must be a string
      (*note (gnutls)Priority Strings::).  When PRIORITIES cannot be
-     parsed, an 'error/invalid-request' error is raised, with an extra
+     parsed, an ‘error/invalid-request’ error is raised, with an extra
      argument indication the position of the error.
 
  -- Scheme Procedure: set-session-default-priority! session
@@ -762,7 +762,7 @@ This chapter lists the GnuTLS Scheme procedures exported by the
           request
      Tell how SESSION, a server-side session, should deal with
      certificate requests.  REQUEST should be either
-     'certificate-request/request' or 'certificate-request/require'.
+     ‘certificate-request/request’ or ‘certificate-request/require’.
 
  -- Scheme Procedure: session-our-certificate-chain session
      Return our certificate chain for SESSION (as sent to the peer) in
@@ -777,15 +777,15 @@ This chapter lists the GnuTLS Scheme procedures exported by the
      the empty list if no certificate was sent.
 
  -- Scheme Procedure: session-client-authentication-type session
-     Return the client authentication type (a 'credential-type' value)
+     Return the client authentication type (a ‘credential-type’ value)
      used in SESSION.
 
  -- Scheme Procedure: session-server-authentication-type session
-     Return the server authentication type (a 'credential-type' value)
+     Return the server authentication type (a ‘credential-type’ value)
      used in SESSION.
 
  -- Scheme Procedure: session-authentication-type session
-     Return the authentication type (a 'credential-type' value) used by
+     Return the authentication type (a ‘credential-type’ value) used by
      SESSION.
 
  -- Scheme Procedure: session-protocol session
@@ -826,140 +826,140 @@ This chapter lists the GnuTLS Scheme procedures exported by the
 
  -- Scheme Procedure: make-session end [flags...]
      Return a new session for connection end END, either
-     'connection-end/server' or 'connection-end/client'.  The optional
-     FLAGS arguments are 'connection-flag' values such as
-     'connection-flag/auto-reauth'.
+     ‘connection-end/server’ or ‘connection-end/client’.  The optional
+     FLAGS arguments are ‘connection-flag’ values such as
+     ‘connection-flag/auto-reauth’.
 
  -- Scheme Procedure: gnutls-version
      Return a string denoting the version number of the underlying
-     GnuTLS library, e.g., '"1.7.2"'.
+     GnuTLS library, e.g., ‘"1.7.2"’.
 
  -- Scheme Procedure: openpgp-keyring? obj
-     Return true if OBJ is of type 'openpgp-keyring'.
+     Return true if OBJ is of type ‘openpgp-keyring’.
 
  -- Scheme Procedure: openpgp-private-key? obj
-     Return true if OBJ is of type 'openpgp-private-key'.
+     Return true if OBJ is of type ‘openpgp-private-key’.
 
  -- Scheme Procedure: openpgp-certificate? obj
-     Return true if OBJ is of type 'openpgp-certificate'.
+     Return true if OBJ is of type ‘openpgp-certificate’.
 
  -- Scheme Procedure: x509-private-key? obj
-     Return true if OBJ is of type 'x509-private-key'.
+     Return true if OBJ is of type ‘x509-private-key’.
 
  -- Scheme Procedure: x509-certificate? obj
-     Return true if OBJ is of type 'x509-certificate'.
+     Return true if OBJ is of type ‘x509-certificate’.
 
  -- Scheme Procedure: psk-client-credentials? obj
-     Return true if OBJ is of type 'psk-client-credentials'.
+     Return true if OBJ is of type ‘psk-client-credentials’.
 
  -- Scheme Procedure: psk-server-credentials? obj
-     Return true if OBJ is of type 'psk-server-credentials'.
+     Return true if OBJ is of type ‘psk-server-credentials’.
 
  -- Scheme Procedure: srp-client-credentials? obj
-     Return true if OBJ is of type 'srp-client-credentials'.
+     Return true if OBJ is of type ‘srp-client-credentials’.
 
  -- Scheme Procedure: srp-server-credentials? obj
-     Return true if OBJ is of type 'srp-server-credentials'.
+     Return true if OBJ is of type ‘srp-server-credentials’.
 
  -- Scheme Procedure: certificate-credentials? obj
-     Return true if OBJ is of type 'certificate-credentials'.
+     Return true if OBJ is of type ‘certificate-credentials’.
 
  -- Scheme Procedure: dh-parameters? obj
-     Return true if OBJ is of type 'dh-parameters'.
+     Return true if OBJ is of type ‘dh-parameters’.
 
  -- Scheme Procedure: anonymous-server-credentials? obj
-     Return true if OBJ is of type 'anonymous-server-credentials'.
+     Return true if OBJ is of type ‘anonymous-server-credentials’.
 
  -- Scheme Procedure: anonymous-client-credentials? obj
-     Return true if OBJ is of type 'anonymous-client-credentials'.
+     Return true if OBJ is of type ‘anonymous-client-credentials’.
 
  -- Scheme Procedure: session? obj
-     Return true if OBJ is of type 'session'.
+     Return true if OBJ is of type ‘session’.
 
  -- Scheme Procedure: openpgp-certificate-format->string enumval
-     Return a string describing ENUMVAL, a 'openpgp-certificate-format'
+     Return a string describing ENUMVAL, a ‘openpgp-certificate-format’
      value.
 
  -- Scheme Procedure: error->string enumval
-     Return a string describing ENUMVAL, a 'error' value.
+     Return a string describing ENUMVAL, a ‘error’ value.
 
  -- Scheme Procedure: certificate-verify->string enumval
-     Return a string describing ENUMVAL, a 'certificate-verify' value.
+     Return a string describing ENUMVAL, a ‘certificate-verify’ value.
 
  -- Scheme Procedure: key-usage->string enumval
-     Return a string describing ENUMVAL, a 'key-usage' value.
+     Return a string describing ENUMVAL, a ‘key-usage’ value.
 
  -- Scheme Procedure: psk-key-format->string enumval
-     Return a string describing ENUMVAL, a 'psk-key-format' value.
+     Return a string describing ENUMVAL, a ‘psk-key-format’ value.
 
  -- Scheme Procedure: server-name-type->string enumval
-     Return a string describing ENUMVAL, a 'server-name-type' value.
+     Return a string describing ENUMVAL, a ‘server-name-type’ value.
 
  -- Scheme Procedure: sign-algorithm->string enumval
-     Return a string describing ENUMVAL, a 'sign-algorithm' value.
+     Return a string describing ENUMVAL, a ‘sign-algorithm’ value.
 
  -- Scheme Procedure: pk-algorithm->string enumval
-     Return a string describing ENUMVAL, a 'pk-algorithm' value.
+     Return a string describing ENUMVAL, a ‘pk-algorithm’ value.
 
  -- Scheme Procedure: x509-subject-alternative-name->string enumval
      Return a string describing ENUMVAL, a
-     'x509-subject-alternative-name' value.
+     ‘x509-subject-alternative-name’ value.
 
  -- Scheme Procedure: x509-certificate-format->string enumval
-     Return a string describing ENUMVAL, a 'x509-certificate-format'
+     Return a string describing ENUMVAL, a ‘x509-certificate-format’
      value.
 
  -- Scheme Procedure: certificate-type->string enumval
-     Return a string describing ENUMVAL, a 'certificate-type' value.
+     Return a string describing ENUMVAL, a ‘certificate-type’ value.
 
  -- Scheme Procedure: protocol->string enumval
-     Return a string describing ENUMVAL, a 'protocol' value.
+     Return a string describing ENUMVAL, a ‘protocol’ value.
 
  -- Scheme Procedure: close-request->string enumval
-     Return a string describing ENUMVAL, a 'close-request' value.
+     Return a string describing ENUMVAL, a ‘close-request’ value.
 
  -- Scheme Procedure: certificate-request->string enumval
-     Return a string describing ENUMVAL, a 'certificate-request' value.
+     Return a string describing ENUMVAL, a ‘certificate-request’ value.
 
  -- Scheme Procedure: certificate-status->string enumval
-     Return a string describing ENUMVAL, a 'certificate-status' value.
+     Return a string describing ENUMVAL, a ‘certificate-status’ value.
 
  -- Scheme Procedure: handshake-description->string enumval
-     Return a string describing ENUMVAL, a 'handshake-description'
+     Return a string describing ENUMVAL, a ‘handshake-description’
      value.
 
  -- Scheme Procedure: alert-description->string enumval
-     Return a string describing ENUMVAL, a 'alert-description' value.
+     Return a string describing ENUMVAL, a ‘alert-description’ value.
 
  -- Scheme Procedure: alert-level->string enumval
-     Return a string describing ENUMVAL, a 'alert-level' value.
+     Return a string describing ENUMVAL, a ‘alert-level’ value.
 
  -- Scheme Procedure: connection-flag->string enumval
-     Return a string describing ENUMVAL, a 'connection-flag' value.
+     Return a string describing ENUMVAL, a ‘connection-flag’ value.
 
  -- Scheme Procedure: connection-end->string enumval
-     Return a string describing ENUMVAL, a 'connection-end' value.
+     Return a string describing ENUMVAL, a ‘connection-end’ value.
 
  -- Scheme Procedure: compression-method->string enumval
-     Return a string describing ENUMVAL, a 'compression-method' value.
+     Return a string describing ENUMVAL, a ‘compression-method’ value.
 
  -- Scheme Procedure: digest->string enumval
-     Return a string describing ENUMVAL, a 'digest' value.
+     Return a string describing ENUMVAL, a ‘digest’ value.
 
  -- Scheme Procedure: mac->string enumval
-     Return a string describing ENUMVAL, a 'mac' value.
+     Return a string describing ENUMVAL, a ‘mac’ value.
 
  -- Scheme Procedure: credentials->string enumval
-     Return a string describing ENUMVAL, a 'credentials' value.
+     Return a string describing ENUMVAL, a ‘credentials’ value.
 
  -- Scheme Procedure: params->string enumval
-     Return a string describing ENUMVAL, a 'params' value.
+     Return a string describing ENUMVAL, a ‘params’ value.
 
  -- Scheme Procedure: kx->string enumval
-     Return a string describing ENUMVAL, a 'kx' value.
+     Return a string describing ENUMVAL, a ‘kx’ value.
 
  -- Scheme Procedure: cipher->string enumval
-     Return a string describing ENUMVAL, a 'cipher' value.
+     Return a string describing ENUMVAL, a ‘cipher’ value.
 
 
 File: gnutls-guile.info,  Node: Copying Information,  Next: Procedure Index,  Prev: Guile Reference,  Up: Top
@@ -972,7 +972,7 @@ GNU Free Documentation License
 
                      Version 1.3, 3 November 2008
 
-     Copyright (C) 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc.
+     Copyright © 2000, 2001, 2002, 2007, 2008 Free Software Foundation, Inc.
      <https://fsf.org/>
 
      Everyone is permitted to copy and distribute verbatim copies
@@ -981,7 +981,7 @@ GNU Free Documentation License
   0. PREAMBLE
 
      The purpose of this License is to make a manual, textbook, or other
-     functional and useful document "free" in the sense of freedom: to
+     functional and useful document “free” in the sense of freedom: to
      assure everyone the effective freedom to copy and redistribute it,
      with or without modifying it, either commercially or
      noncommercially.  Secondarily, this License preserves for the
@@ -1634,22 +1634,22 @@ Concept Index
 
 
 Tag Table:
-Node: Top802
-Node: Preface1874
-Node: Guile Preparations2441
-Node: Guile API Conventions5186
-Node: Enumerates and Constants5760
-Node: Procedure Names8085
-Node: Representation of Binary Data9068
-Ref: Representation of Binary Data-Footnote-19993
-Node: Input and Output10109
-Node: Exception Handling12454
-Node: Guile Examples14282
-Node: Anonymous Authentication Guile Example14581
-Node: Guile Reference17098
-Node: Copying Information37275
-Node: Procedure Index62463
-Node: Concept Index73486
+Node: Top801
+Node: Preface1872
+Node: Guile Preparations2439
+Node: Guile API Conventions5212
+Node: Enumerates and Constants5786
+Node: Procedure Names8157
+Node: Representation of Binary Data9160
+Ref: Representation of Binary Data-Footnote-110093
+Node: Input and Output10213
+Node: Exception Handling12602
+Node: Guile Examples14454
+Node: Anonymous Authentication Guile Example14753
+Node: Guile Reference17274
+Node: Copying Information37763
+Node: Procedure Index62954
+Node: Concept Index73977
 
 End Tag Table
 

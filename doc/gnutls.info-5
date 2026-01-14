@@ -1,8 +1,8 @@
-This is gnutls.info, produced by makeinfo version 6.8 from gnutls.texi.
+This is gnutls.info, produced by makeinfo version 7.1 from gnutls.texi.
 
 This manual is last updated 9 February 2023 for version 3.7.9 of GnuTLS.
 
-Copyright (C) 2001-2023 Free Software Foundation, Inc.\\ Copyright (C)
+Copyright © 2001-2023 Free Software Foundation, Inc.\\ Copyright ©
 2001-2023 Nikos Mavrogiannopoulos
 
      Permission is granted to copy, distribute and/or modify this
@@ -33,29 +33,29 @@ E.4 PKCS 7 API
 ==============
 
 The following functions are to be used for PKCS 7 structures handling.
-Their prototypes lie in 'gnutls/pkcs7.h'.
+Their prototypes lie in ‘gnutls/pkcs7.h’.
 
 gnutls_pkcs7_add_attr
 ---------------------
 
  -- Function: int gnutls_pkcs7_add_attr (gnutls_pkcs7_attrs_t * LIST,
           const char * OID, gnutls_datum_t * DATA, unsigned FLAGS)
-     LIST: A list of existing attributes or pointer to 'NULL' for the
+     LIST: A list of existing attributes or pointer to ‘NULL’ for the
      first one
 
      OID: the OID of the attribute to be set
 
      DATA: the raw (DER-encoded) data of the attribute to be set
 
-     FLAGS: zero or 'GNUTLS_PKCS7_ATTR_ENCODE_OCTET_STRING'
+     FLAGS: zero or ‘GNUTLS_PKCS7_ATTR_ENCODE_OCTET_STRING’
 
-     This function will set a PKCS '7' attribute in the provided list.
+     This function will set a PKCS ‘7’ attribute in the provided list.
      If this function fails, the previous list would be deallocated.
 
      Note that any attributes set with this function must either be DER
      or BER encoded, unless a special flag is present.
 
-     *Returns:* On success, the new list head, otherwise 'NULL' .
+     *Returns:* On success, the new list head, otherwise ‘NULL’ .
 
      *Since:* 3.4.2
 
@@ -65,7 +65,7 @@ gnutls_pkcs7_attrs_deinit
  -- Function: void gnutls_pkcs7_attrs_deinit (gnutls_pkcs7_attrs_t LIST)
      LIST: A list of existing attributes
 
-     This function will clear a PKCS '7' attribute list.
+     This function will clear a PKCS ‘7’ attribute list.
 
      *Since:* 3.4.2
 
@@ -89,7 +89,7 @@ gnutls_pkcs7_delete_crl
      This function will delete a crl from a PKCS7 or RFC2630 crl set.
      Index starts from 0.  Returns 0 on success.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_delete_crt
@@ -104,7 +104,7 @@ gnutls_pkcs7_delete_crt
      This function will delete a certificate from a PKCS7 or RFC2630
      certificate set.  Index starts from 0.  Returns 0 on success.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_export
@@ -125,13 +125,13 @@ gnutls_pkcs7_export
      This function will export the pkcs7 structure to DER or PEM format.
 
      If the buffer provided is not long enough to hold the output, then
-     * 'output_data_size' is updated and 'GNUTLS_E_SHORT_MEMORY_BUFFER'
+     * ‘output_data_size’ is updated and ‘GNUTLS_E_SHORT_MEMORY_BUFFER’
      will be returned.
 
      If the structure is PEM encoded, it will have a header of "BEGIN
      PKCS7".
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_export2
@@ -147,12 +147,12 @@ gnutls_pkcs7_export2
 
      This function will export the pkcs7 structure to DER or PEM format.
 
-     The output buffer is allocated using 'gnutls_malloc()' .
+     The output buffer is allocated using ‘gnutls_malloc()’ .
 
      If the structure is PEM encoded, it will have a header of "BEGIN
      PKCS7".
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
      *Since:* 3.1.3
@@ -163,7 +163,7 @@ gnutls_pkcs7_get_attr
  -- Function: int gnutls_pkcs7_get_attr (gnutls_pkcs7_attrs_t LIST,
           unsigned IDX, char ** OID, gnutls_datum_t * DATA, unsigned
           FLAGS)
-     LIST: A list of existing attributes or 'NULL' for the first one
+     LIST: A list of existing attributes or ‘NULL’ for the first one
 
      IDX: the index of the attribute to get
 
@@ -171,15 +171,15 @@ gnutls_pkcs7_get_attr
 
      DATA: the raw data of the attribute
 
-     FLAGS: zero or 'GNUTLS_PKCS7_ATTR_ENCODE_OCTET_STRING'
+     FLAGS: zero or ‘GNUTLS_PKCS7_ATTR_ENCODE_OCTET_STRING’
 
-     This function will get a PKCS '7' attribute from the provided list.
+     This function will get a PKCS ‘7’ attribute from the provided list.
      The OID is a constant string, but data will be allocated and must
      be deinitialized by the caller.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
-     'GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE' is returned if there are no
+     ‘GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE’ is returned if there are no
      data in the current index.
 
      *Since:* 3.4.2
@@ -193,7 +193,7 @@ gnutls_pkcs7_get_crl_count
      This function will return the number of certificates in the PKCS7
      or RFC2630 crl set.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_get_crl_raw
@@ -211,11 +211,11 @@ gnutls_pkcs7_get_crl_raw
 
      This function will return a crl of the PKCS7 or RFC2630 crl set.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.  If the provided buffer is not
-     long enough, then 'crl_size' is updated and
-     'GNUTLS_E_SHORT_MEMORY_BUFFER' is returned.  After the last crl has
-     been read 'GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE' will be returned.
+     long enough, then ‘crl_size’ is updated and
+     ‘GNUTLS_E_SHORT_MEMORY_BUFFER’ is returned.  After the last crl has
+     been read ‘GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE’ will be returned.
 
 gnutls_pkcs7_get_crl_raw2
 -------------------------
@@ -231,9 +231,9 @@ gnutls_pkcs7_get_crl_raw2
      This function will return a DER encoded CRL of the PKCS7 or RFC2630
      crl set.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.  After the last crl has been read
-     'GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE' will be returned.
+     ‘GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE’ will be returned.
 
      *Since:* 3.4.2
 
@@ -241,7 +241,7 @@ gnutls_pkcs7_get_crt_count
 --------------------------
 
  -- Function: int gnutls_pkcs7_get_crt_count (gnutls_pkcs7_t PKCS7)
-     PKCS7: should contain a 'gnutls_pkcs7_t' type
+     PKCS7: should contain a ‘gnutls_pkcs7_t’ type
 
      This function will return the number of certificates in the PKCS7
      or RFC2630 certificate set.
@@ -267,12 +267,12 @@ gnutls_pkcs7_get_crt_raw
      certificate set.
 
      After the last certificate has been read
-     'GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE' will be returned.
+     ‘GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE’ will be returned.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.  If the provided buffer is not
-     long enough, then 'certificate_size' is updated and
-     'GNUTLS_E_SHORT_MEMORY_BUFFER' is returned.
+     long enough, then ‘certificate_size’ is updated and
+     ‘GNUTLS_E_SHORT_MEMORY_BUFFER’ is returned.
 
 gnutls_pkcs7_get_crt_raw2
 -------------------------
@@ -284,18 +284,18 @@ gnutls_pkcs7_get_crt_raw2
      INDX: contains the index of the certificate to extract
 
      CERT: will hold the contents of the certificate; must be
-     deallocated with 'gnutls_free()'
+     deallocated with ‘gnutls_free()’
 
      This function will return a certificate of the PKCS7 or RFC2630
      certificate set.
 
      After the last certificate has been read
-     'GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE' will be returned.
+     ‘GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE’ will be returned.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.  If the provided buffer is not
-     long enough, then 'certificate_size' is updated and
-     'GNUTLS_E_SHORT_MEMORY_BUFFER' is returned.
+     long enough, then ‘certificate_size’ is updated and
+     ‘GNUTLS_E_SHORT_MEMORY_BUFFER’ is returned.
 
      *Since:* 3.4.2
 
@@ -306,22 +306,22 @@ gnutls_pkcs7_get_embedded_data
           unsigned FLAGS, gnutls_datum_t * DATA)
      PKCS7: should contain a gnutls_pkcs7_t type
 
-     FLAGS: must be zero or 'GNUTLS_PKCS7_EDATA_GET_RAW'
+     FLAGS: must be zero or ‘GNUTLS_PKCS7_EDATA_GET_RAW’
 
      DATA: will hold the embedded data in the provided structure
 
      This function will return the data embedded in the signature of the
      PKCS7 structure.  If no data are available then
-     'GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE' will be returned.
+     ‘GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE’ will be returned.
 
-     The returned data must be de-allocated using 'gnutls_free()' .
+     The returned data must be de-allocated using ‘gnutls_free()’ .
 
      Note, that this function returns the exact same data that are
-     authenticated.  If the 'GNUTLS_PKCS7_EDATA_GET_RAW' flag is
+     authenticated.  If the ‘GNUTLS_PKCS7_EDATA_GET_RAW’ flag is
      provided, the returned data will be including the wrapping
      tag/value as they are encoded in the structure.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
      *Since:* 3.4.8
@@ -335,10 +335,10 @@ gnutls_pkcs7_get_embedded_data_oid
 
      This function will return the OID of the data embedded in the
      signature of the PKCS7 structure.  If no data are available then
-     'NULL' will be returned.  The returned value will be valid during
-     the lifetime of the 'pkcs7' structure.
+     ‘NULL’ will be returned.  The returned value will be valid during
+     the lifetime of the ‘pkcs7’ structure.
 
-     *Returns:* On success, a pointer to an OID string, 'NULL' on error.
+     *Returns:* On success, a pointer to an OID string, ‘NULL’ on error.
 
      *Since:* 3.5.5
 
@@ -347,7 +347,7 @@ gnutls_pkcs7_get_signature_count
 
  -- Function: int gnutls_pkcs7_get_signature_count (gnutls_pkcs7_t
           PKCS7)
-     PKCS7: should contain a 'gnutls_pkcs7_t' type
+     PKCS7: should contain a ‘gnutls_pkcs7_t’ type
 
      This function will return the number of signatures in the PKCS7
      structure.
@@ -362,18 +362,18 @@ gnutls_pkcs7_get_signature_info
 
  -- Function: int gnutls_pkcs7_get_signature_info (gnutls_pkcs7_t PKCS7,
           unsigned IDX, gnutls_pkcs7_signature_info_st * INFO)
-     PKCS7: should contain a 'gnutls_pkcs7_t' type
+     PKCS7: should contain a ‘gnutls_pkcs7_t’ type
 
      IDX: the index of the signature info to check
 
      INFO: will contain the output signature
 
      This function will return information about the signature
-     identified by idx in the provided PKCS '7' structure.  The
+     identified by idx in the provided PKCS ‘7’ structure.  The
      information should be deinitialized using
-     'gnutls_pkcs7_signature_info_deinit()' .
+     ‘gnutls_pkcs7_signature_info_deinit()’ .
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
      *Since:* 3.4.2
@@ -390,14 +390,14 @@ gnutls_pkcs7_import
      FORMAT: One of DER or PEM
 
      This function will convert the given DER or PEM encoded PKCS7 to
-     the native 'gnutls_pkcs7_t' format.  The output will be stored in
-     'pkcs7' .  Any signed data that may be present inside the 'pkcs7'
-     structure, like certificates set by 'gnutls_pkcs7_set_crt()' , will
+     the native ‘gnutls_pkcs7_t’ format.  The output will be stored in
+     ‘pkcs7’ .  Any signed data that may be present inside the ‘pkcs7’
+     structure, like certificates set by ‘gnutls_pkcs7_set_crt()’ , will
      be freed and overwritten by this function.
 
      If the PKCS7 is PEM encoded it should have a header of "PKCS7".
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_init
@@ -410,7 +410,7 @@ gnutls_pkcs7_init
      usually contain lists of X.509 Certificates and X.509 Certificate
      revocation lists.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_print
@@ -425,15 +425,15 @@ gnutls_pkcs7_print
 
      OUT: Newly allocated datum with null terminated string.
 
-     This function will pretty print a signed PKCS '7' structure,
+     This function will pretty print a signed PKCS ‘7’ structure,
      suitable for display to a human.
 
-     Currently the supported formats are 'GNUTLS_CRT_PRINT_FULL' and
-     'GNUTLS_CRT_PRINT_COMPACT' .
+     Currently the supported formats are ‘GNUTLS_CRT_PRINT_FULL’ and
+     ‘GNUTLS_CRT_PRINT_COMPACT’ .
 
-     The output 'out' needs to be deallocated using 'gnutls_free()' .
+     The output ‘out’ needs to be deallocated using ‘gnutls_free()’ .
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_print_signature_info
@@ -449,15 +449,15 @@ gnutls_pkcs7_print_signature_info
 
      OUT: Newly allocated datum with null terminated string.
 
-     This function will pretty print a PKCS '7' signature info
+     This function will pretty print a PKCS ‘7’ signature info
      structure, suitable for display to a human.
 
-     Currently the supported formats are 'GNUTLS_CRT_PRINT_FULL' and
-     'GNUTLS_CRT_PRINT_COMPACT' .
+     Currently the supported formats are ‘GNUTLS_CRT_PRINT_FULL’ and
+     ‘GNUTLS_CRT_PRINT_COMPACT’ .
 
-     The output 'out' needs to be deallocated using 'gnutls_free()' .
+     The output ‘out’ needs to be deallocated using ‘gnutls_free()’ .
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
      *Since:* 3.6.14
@@ -474,7 +474,7 @@ gnutls_pkcs7_set_crl
      This function will add a parsed CRL to the PKCS7 or RFC2630 crl
      set.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_set_crl_raw
@@ -488,7 +488,7 @@ gnutls_pkcs7_set_crl_raw
 
      This function will add a crl to the PKCS7 or RFC2630 crl set.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_set_crt
@@ -502,9 +502,9 @@ gnutls_pkcs7_set_crt
 
      This function will add a parsed certificate to the PKCS7 or RFC2630
      certificate set.  This is a wrapper function over
-     'gnutls_pkcs7_set_crt_raw()' .
+     ‘gnutls_pkcs7_set_crt_raw()’ .
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_set_crt_raw
@@ -519,7 +519,7 @@ gnutls_pkcs7_set_crt_raw
      This function will add a certificate to the PKCS7 or RFC2630
      certificate set.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
 gnutls_pkcs7_sign
@@ -530,35 +530,35 @@ gnutls_pkcs7_sign
           gnutls_datum_t * DATA, gnutls_pkcs7_attrs_t SIGNED_ATTRS,
           gnutls_pkcs7_attrs_t UNSIGNED_ATTRS, gnutls_digest_algorithm_t
           DIG, unsigned FLAGS)
-     PKCS7: should contain a 'gnutls_pkcs7_t' type
+     PKCS7: should contain a ‘gnutls_pkcs7_t’ type
 
      SIGNER: the certificate to sign the structure
 
      SIGNER_KEY: the key to sign the structure
 
-     DATA: The data to be signed or 'NULL' if the data are already
+     DATA: The data to be signed or ‘NULL’ if the data are already
      embedded
 
      SIGNED_ATTRS: Any additional attributes to be included in the
-     signed ones (or 'NULL' )
+     signed ones (or ‘NULL’ )
 
      UNSIGNED_ATTRS: Any additional attributes to be included in the
-     unsigned ones (or 'NULL' )
+     unsigned ones (or ‘NULL’ )
 
      DIG: The digest algorithm to use for signing
 
-     FLAGS: Should be zero or one of 'GNUTLS_PKCS7' flags
+     FLAGS: Should be zero or one of ‘GNUTLS_PKCS7’ flags
 
-     This function will add a signature in the provided PKCS '7'
+     This function will add a signature in the provided PKCS ‘7’
      structure for the provided data.  Multiple signatures can be made
      with different signers.
 
-     The available flags are: 'GNUTLS_PKCS7_EMBED_DATA' ,
-     'GNUTLS_PKCS7_INCLUDE_TIME' , 'GNUTLS_PKCS7_INCLUDE_CERT' , and
-     'GNUTLS_PKCS7_WRITE_SPKI' .  They are explained in the
-     'gnutls_pkcs7_sign_flags' definition.
+     The available flags are: ‘GNUTLS_PKCS7_EMBED_DATA’ ,
+     ‘GNUTLS_PKCS7_INCLUDE_TIME’ , ‘GNUTLS_PKCS7_INCLUDE_CERT’ , and
+     ‘GNUTLS_PKCS7_WRITE_SPKI’ .  They are explained in the
+     ‘gnutls_pkcs7_sign_flags’ definition.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.
 
      *Since:* 3.4.2
@@ -568,10 +568,10 @@ gnutls_pkcs7_signature_info_deinit
 
  -- Function: void gnutls_pkcs7_signature_info_deinit
           (gnutls_pkcs7_signature_info_st * INFO)
-     INFO: should point to a 'gnutls_pkcs7_signature_info_st' structure
+     INFO: should point to a ‘gnutls_pkcs7_signature_info_st’ structure
 
      This function will deinitialize any allocated value in the provided
-     'gnutls_pkcs7_signature_info_st' .
+     ‘gnutls_pkcs7_signature_info_st’ .
 
      *Since:* 3.4.2
 
@@ -582,7 +582,7 @@ gnutls_pkcs7_verify
           gnutls_x509_trust_list_t TL, gnutls_typed_vdata_st * VDATA,
           unsigned int VDATA_SIZE, unsigned IDX, const gnutls_datum_t *
           DATA, unsigned FLAGS)
-     PKCS7: should contain a 'gnutls_pkcs7_t' type
+     PKCS7: should contain a ‘gnutls_pkcs7_t’ type
 
      TL: A list of trusted certificates
 
@@ -592,19 +592,19 @@ gnutls_pkcs7_verify
 
      IDX: the index of the signature info to check
 
-     DATA: The data to be verified or 'NULL'
+     DATA: The data to be verified or ‘NULL’
 
-     FLAGS: Zero or an OR list of 'gnutls_certificate_verify_flags'
+     FLAGS: Zero or an OR list of ‘gnutls_certificate_verify_flags’
 
      This function will verify the provided data against the signature
-     present in the SignedData of the PKCS '7' structure.  If the data
+     present in the SignedData of the PKCS ‘7’ structure.  If the data
      provided are NULL then the data in the encapsulatedContent field
      will be used instead.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.  A verification error results to
-     a 'GNUTLS_E_PK_SIG_VERIFY_FAILED' and the lack of encapsulated data
-     to verify to a 'GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE' .
+     a ‘GNUTLS_E_PK_SIG_VERIFY_FAILED’ and the lack of encapsulated data
+     to verify to a ‘GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE’ .
 
      *Since:* 3.4.2
 
@@ -614,35 +614,35 @@ gnutls_pkcs7_verify_direct
  -- Function: int gnutls_pkcs7_verify_direct (gnutls_pkcs7_t PKCS7,
           gnutls_x509_crt_t SIGNER, unsigned IDX, const gnutls_datum_t *
           DATA, unsigned FLAGS)
-     PKCS7: should contain a 'gnutls_pkcs7_t' type
+     PKCS7: should contain a ‘gnutls_pkcs7_t’ type
 
      SIGNER: the certificate believed to have signed the structure
 
      IDX: the index of the signature info to check
 
-     DATA: The data to be verified or 'NULL'
+     DATA: The data to be verified or ‘NULL’
 
-     FLAGS: Zero or an OR list of 'gnutls_certificate_verify_flags'
+     FLAGS: Zero or an OR list of ‘gnutls_certificate_verify_flags’
 
      This function will verify the provided data against the signature
-     present in the SignedData of the PKCS '7' structure.  If the data
+     present in the SignedData of the PKCS ‘7’ structure.  If the data
      provided are NULL then the data in the encapsulatedContent field
      will be used instead.
 
-     Note that, unlike 'gnutls_pkcs7_verify()' this function does not
+     Note that, unlike ‘gnutls_pkcs7_verify()’ this function does not
      verify the key purpose of the signer.  It is expected for the
-     caller to verify the intended purpose of the 'signer' -e.g., via
-     'gnutls_x509_crt_get_key_purpose_oid()' , or
-     'gnutls_x509_crt_check_key_purpose()' .
+     caller to verify the intended purpose of the ‘signer’ -e.g., via
+     ‘gnutls_x509_crt_get_key_purpose_oid()’ , or
+     ‘gnutls_x509_crt_check_key_purpose()’ .
 
      Note also, that since GnuTLS 3.5.6 this function introduces checks
-     in the end certificate ( 'signer' ), including time checks and key
+     in the end certificate ( ‘signer’ ), including time checks and key
      usage checks.
 
-     *Returns:* On success, 'GNUTLS_E_SUCCESS' (0) is returned,
+     *Returns:* On success, ‘GNUTLS_E_SUCCESS’ (0) is returned,
      otherwise a negative error value.  A verification error results to
-     a 'GNUTLS_E_PK_SIG_VERIFY_FAILED' and the lack of encapsulated data
-     to verify to a 'GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE' .
+     a ‘GNUTLS_E_PK_SIG_VERIFY_FAILED’ and the lack of encapsulated data
+     to verify to a ‘GNUTLS_E_REQUESTED_DATA_NOT_AVAILABLE’ .
 
      *Since:* 3.4.2
 

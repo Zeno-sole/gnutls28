@@ -1,3 +1,9 @@
+gnutls28 (3.7.9-2+deb12u5deepin1) unstable; urgency=medium
+
+  * add support for Hygon Genuine CPUs in x86 acceleration.
+
+ -- xinpeng.wang <wangxinpeng@uniontech.com>  Wed, 14 Jan 2026 14:00:16 +0800
+
 gnutls28 (3.7.9-2+deb12u5) bookworm-security; urgency=medium
 
   * Cherry-pick fixes from 3.8.10 release:
