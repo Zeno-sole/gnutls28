@@ -22,4 +22,5 @@
 69_0004-x509-avoid-double-free-when-exporting-othernames-in-.patch
 69_0005-certtool-avoid-1-byte-write-buffer-overrun-when-pars.patch
 69_0006-handshake-clear-HSK_PSK_SELECTED-is-when-resetting-b.patch
+0025-pkcs11-avoid-stack-overwrite-when-initializing-a-tok.patch
 uniontech-adapter-hygon.patch

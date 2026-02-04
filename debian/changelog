@@ -1,3 +1,10 @@
+gnutls28 (3.7.9-2+deb12u5deepin2) unstable; urgency=medium
+
+  * pkcs11: avoid stack overwrite when initializing a token
+    [CVE-2025-9820]
+
+ -- Tianyu Chen <sweetyfish@deepin.org>  Wed, 04 Feb 2026 15:13:40 +0800
+
 gnutls28 (3.7.9-2+deb12u5deepin1) unstable; urgency=medium
 
   * add support for Hygon Genuine CPUs in x86 acceleration.
