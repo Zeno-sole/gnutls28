@@ -1,0 +1,33 @@
+From: Alexander Sosedkin <asosedkin@redhat.com>
+Subject: x509/name_constraints: fix intersecting empty constraints
+Bug: https://gitlab.com/gnutls/gnutls/-/issues/1824
+Origin: https://gitlab.com/gnutls/gnutls/-/commit/1dead2faec6320aaba321eb56f20d442df192b83
+Applied-upstream: 3.8.11
+CVE: CVE-2026-42011
+
+Permitted name constraints were wrongfully ignored
+when prior CAs only had excluded name constraints,
+resulting in a name constraint bypass.
+
+With this change, they are taken into account and propagate.
+
+Reported-by: Haruto Kimura (Stella)
+Fixes: #1824
+Fixes: CVE-2026-42011
+Fixes: GNUTLS-SA-2026-04-29-6
+CVSS: 4.8 Medium CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:N
+
+Adapted for gnutls28 3.7.9 (on top of patch 65) by lichenggang.
+
+--- a/lib/x509/name_constraints.c	2026-05-13 14:34:58.764204497 +0800
++++ b/lib/x509/name_constraints.c	2026-05-13 14:35:42.909156768 +0800
+@@ -348,9 +348,6 @@
+ 	memset(types_with_empty_intersection, 0,
+ 	       sizeof(types_with_empty_intersection));
+ 
+-	if (permitted->size == 0 || permitted2->size == 0)
+-		return 0;
+-
+ 	/* Phase 1
+ 	 * For each name in PERMITTED, if a PERMITTED2 does not contain a name
+ 	 * with the same type, move the original name to REMOVED.

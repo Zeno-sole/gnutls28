@@ -1,0 +1,57 @@
+From: Alexander Sosedkin <asosedkin@redhat.com>
+Subject: buffers: add more checks to DTLS reassembly
+Origin: https://gitlab.com/gnutls/gnutls/-/commit/65ab33fa54e34fba69d793735b7df3d383d1ff78
+Applied-upstream: 3.8.11
+CVE: CVE-2026-33846
+Depends: 70-buffers-switch-from-end_offset-to-frag_length.patch
+
+Previously, gnutls didn't check that DTLS fragments claimed
+a consistent message_length value.
+Additionally, a crucial array size check was missing,
+enabling an attacker to cause a heap overwrite.
+The updated version rejects fragments with mismatching length
+and adds a missing boundary check.
+
+Reported-by: Haruto Kimura (Stella)
+Reported-by: Oscar Reparaz
+Reported-by: Zou Dikai
+Fixes: #1816
+Fixes: #1838
+Fixes: #1839
+Fixes: CVE-2026-33846
+Fixes: GNUTLS-SA-2026-04-29-1
+CVSS: 7.4 High CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:H/A:H
+CVSS: 7.5 High CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H
+
+Adapted for gnutls28 3.7.9 (on top of CVE-2026-33845 frag_length patch) by lichenggang.
+
+--- a/lib/buffers.c	2026-05-13 14:01:38.626246770 +0800
++++ b/lib/buffers.c	2026-05-13 14:03:18.664390218 +0800
+@@ -1049,6 +1049,27 @@
+ 					      hsk);
+ 
+ 	} else {
++		if (hsk->length !=
++		    session->internals.handshake_recv_buffer[pos].length) {
++			/* inconsistent across fragments */
++			_gnutls_handshake_buffer_clear(hsk);
++			return gnutls_assert_val(
++				GNUTLS_E_UNEXPECTED_PACKET_LENGTH);
++		}
++		if (hsk->data.length >
++		    session->internals.handshake_recv_buffer[pos]
++		    .data.max_length) {
++			/* would overwrite if merged */
++			_gnutls_handshake_buffer_clear(hsk);
++			return gnutls_assert_val(
++				GNUTLS_E_UNEXPECTED_PACKET_LENGTH);
++		}
++		if (session->internals.handshake_recv_buffer_size >=
++		    MAX_HANDSHAKE_MSGS) {
++			_gnutls_handshake_buffer_clear(hsk);
++			return gnutls_assert_val(
++				GNUTLS_E_TOO_MANY_HANDSHAKE_PACKETS);
++		}
+ 		if (hsk->start_offset <
+ 		    session->internals.handshake_recv_buffer[pos].
+ 		    start_offset &&

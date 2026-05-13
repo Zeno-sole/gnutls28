@@ -1,0 +1,29 @@
+From: Alexander Sosedkin <asosedkin@redhat.com>
+Subject: lib/auth/rsa_psk: fix binary PSK identity lookup
+Origin: https://gitlab.com/gnutls/gnutls/-/commit/cb1833afd9b6309563211b1c0a7c291f52ca98d5
+Applied-upstream: 3.8.11
+CVE: CVE-2026-42010
+
+A server looking up PSK username with a NUL-character in it
+was wrongfully matching username truncated at a NUL-character.
+Fix the check to compare up to the full username length.
+
+Reported-by: Joshua Rogers of AISLE Research Team <joshua@joshua.hu>
+Fixes: #1850
+Fixes: CVE-2026-42010
+Fixes: GNUTLS-SA-2026-04-29-4
+CVSS: 7.1 High CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:L/A:N
+
+Adapted for gnutls28 3.7.9 by lichenggang.
+
+--- a/lib/auth/rsa_psk.c	2026-05-13 14:36:41.282412015 +0800
++++ b/lib/auth/rsa_psk.c	2026-05-13 14:36:41.286412100 +0800
+@@ -334,7 +334,7 @@
+ 	 * filled in if the key is not found.
+ 	 */
+ 	ret = _gnutls_psk_pwd_find_entry(session, info->username,
+-					 strlen(info->username), &pwd_psk);
++					 info->username_len, &pwd_psk);
+ 	if (ret < 0)
+ 		return gnutls_assert_val(ret);
+ 

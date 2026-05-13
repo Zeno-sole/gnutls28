@@ -1,0 +1,45 @@
+From: Alexander Sosedkin <asosedkin@redhat.com>
+Subject: buffers: match DTLS datagrams by sequence number
+Origin: https://gitlab.com/gnutls/gnutls/-/commit/092c65d004e2f125f2fea3db84d801ac49a09f78
+Applied-upstream: 3.8.11
+CVE: CVE-2026-42009
+
+DTLS handshake fragment reassembly previously matched incoming fragments
+by handshake type only, without checking the sequence number.
+This allowed fragments from different handshake messages
+to be merged into the same reassembly buffer.
+
+Now sequence number is accounted for during reassembly,
+ensuring fragments are only merged when they belong
+to the same handshake message.
+
+Additionally fix handshake_compare qsort comparator to use strict <
+instead of <= when comparing sequence numbers, violating qsort contract.
+
+Reported-by: Zou Dikai
+Fixes: #1839
+Fixes: CVE-2026-42009
+
+Adapted for gnutls28 3.7.9 by lichenggang.
+
+--- a/lib/buffers.c
++++ b/lib/buffers.c
+@@ -884,7 +884,7 @@ static int handshake_compare(const void *_e1, const void *_e2)
+ 	const handshake_buffer_st *e1 = _e1;
+ 	const handshake_buffer_st *e2 = _e2;
+
+-	if (e1->sequence <= e2->sequence)
++	if (e1->sequence < e2->sequence)
+ 		return 1;
+ 	else
+ 		return -1;
+@@ -1011,7 +1011,8 @@ static int merge_handshake_packet(gnutls_session_t session,
+
+ 	for (i = 0; i < session->internals.handshake_recv_buffer_size; i++) {
+ 		if (session->internals.handshake_recv_buffer[i].htype ==
+-		    hsk->htype) {
++		    hsk->htype &&
++		    session->internals.handshake_recv_buffer[i].sequence == hsk->sequence) {
+ 			exists = 1;
+ 			pos = i;
+ 			break;
